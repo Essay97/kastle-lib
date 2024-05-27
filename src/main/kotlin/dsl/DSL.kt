@@ -7,6 +7,12 @@ import io.github.essay97.kastle.model.LinkBehavior
 @DslMarker
 annotation class KastleDsl
 
+/**
+ * The entry point of the DSL
+ *
+ * @param initialRoomId the id of the first room that will be loaded in the game
+ * @param init function that configures the room
+ */
 @KastleDsl
 fun game(initialRoomId: String, init: GameScope.() -> Unit): GameConfiguration {
     val scope = GameScope(initialRoomId)
@@ -14,6 +20,9 @@ fun game(initialRoomId: String, init: GameScope.() -> Unit): GameConfiguration {
     return scope.build()
 }
 
+/**
+ * Works as the receiver for the [game] function and provides the DSL to configure the whole game.
+ */
 @KastleDsl
 class GameScope(private val initialRoomId: String) {
     private var metadata = MetadataDto()
@@ -67,6 +76,9 @@ class GameScope(private val initialRoomId: String) {
 
 }
 
+/**
+ * Works as the receiver for the [GameScope.metadata] function and provides the DSL to configure the metadata.
+ */
 @KastleDsl
 class MetadataScope {
     var author: String? = null
@@ -84,6 +96,9 @@ class MetadataScope {
     )
 }
 
+/**
+ * Works as the receiver for the [GameScope.player] function and provides the DSL to configure the player of the game.
+ */
 @KastleDsl
 class PlayerScope {
     var name = "Player"
@@ -95,6 +110,9 @@ class PlayerScope {
     )
 }
 
+/**
+ * Works as the receiver for the [GameScope.room] function and provides the DSL to configure a room.
+ */
 @KastleDsl
 class RoomScope(private val roomId: String) {
     var name = roomId
@@ -161,6 +179,10 @@ class RoomScope(private val roomId: String) {
     class BuildResult(val room: RoomDto, val items: List<ItemDto>, val characters: List<CharacterDto>)
 }
 
+/**
+ * Works as the receiver for the [RoomScope.north], [RoomScope.south], [RoomScope.east] and [RoomScope.west]
+ * functions and provides the DSL to configure the links between rooms.
+ */
 @KastleDsl
 class DirectionScope(private val roomId: String) {
     var state = LinkState.OPEN
@@ -178,6 +200,9 @@ class DirectionScope(private val roomId: String) {
     )
 }
 
+/**
+ * Works as the receiver for the [RoomScope.character] function and provides the DSL to configure an NPC.
+ */
 @KastleDsl
 class CharacterScope(private val characterId: String) {
     var name = characterId
@@ -213,6 +238,10 @@ class CharacterScope(private val characterId: String) {
     class BuildResult(val character: CharacterDto, val items: List<ItemDto>)
 }
 
+/**
+ * Works as the receiver for the [RoomScope.item] and [QuestionScope.reward] functions and provides the DSL
+ * to configure an item.
+ */
 @KastleDsl
 class ItemScope(private val itemId: String) {
     var name = itemId
@@ -235,6 +264,9 @@ class ItemScope(private val itemId: String) {
     )
 }
 
+/**
+ * Works as the receiver for the [CharacterScope.dialogue] function and provides the DSL to configure a dialogue.
+ */
 @KastleDsl
 class DialogueScope {
     private var questions: MutableList<QuestionDto> = mutableListOf()
@@ -275,6 +307,10 @@ class DialogueScope {
     class BuildResult(val dialogue: DialogueDto, val items: List<ItemDto>)
 }
 
+/**
+ * Works as the receiver for the [DialogueScope.question] function and provides the DSL to configure a question inside
+ * a dialogue.
+ */
 @KastleDsl
 class QuestionScope(private val questionId: String) {
     var text = "Default question"
@@ -307,6 +343,10 @@ class QuestionScope(private val questionId: String) {
     class BuildResult(val question: QuestionDto, val item: ItemDto?)
 }
 
+/**
+ * Works as the receiver for the [QuestionScope.answer] function and provides the DSL to configure an answer
+ * to a question.
+ */
 @KastleDsl
 class AnswerScope {
     var text = "Default answer"
@@ -318,6 +358,10 @@ class AnswerScope {
     )
 }
 
+/**
+ * Works as the receiver for the [GameScope.winIf] function and provides the DSL to configure the conditions that
+ * the player must meet in order to win the game.
+ */
 @KastleDsl
 class WinningConditionsScope {
     var playerOwns: String? = null

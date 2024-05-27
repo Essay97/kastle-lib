@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.kotlin)
     alias(libs.plugins.sqldelight)
+    alias(libs.plugins.dokka)
     `java-library`
 }
 
