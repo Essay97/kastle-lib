@@ -5,7 +5,7 @@ plugins {
     `java-library`
 }
 
-version = "1.0-SNAPSHOT"
+version = "0.0.1"
 group = "io.github.essay97"
 
 repositories {
@@ -24,10 +24,31 @@ tasks.test {
     useJUnitPlatform()
 }
 
+java {
+    withSourcesJar()
+}
+
 sqldelight {
     databases {
         create("Database") {
             packageName.set("io.github.essay97.kastle.db")
         }
     }
+}
+
+tasks.register<Jar>("dokkaHtmlJar") {
+    dependsOn(tasks.dokkaHtml)
+    from(tasks.dokkaHtml.flatMap { it.outputDirectory })
+    archiveClassifier.set("html-docs")
+}
+
+tasks.register<Jar>("dokkaJavadocJar") {
+    dependsOn(tasks.dokkaJavadoc)
+    from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
+    archiveClassifier.set("javadoc")
+}
+
+tasks.register("prepareMaven") {
+    dependsOn(tasks["dokkaJavadocJar"])
+    dependsOn(tasks.build)
 }
