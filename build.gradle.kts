@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.sqldelight)
     alias(libs.plugins.dokka)
     `java-library`
+    `maven-publish`
+    signing
 }
 
 version = "0.0.1"
@@ -42,13 +44,47 @@ tasks.register<Jar>("dokkaHtmlJar") {
     archiveClassifier.set("html-docs")
 }
 
-tasks.register<Jar>("dokkaJavadocJar") {
+val javadocJar by tasks.registering(Jar::class) {
     dependsOn(tasks.dokkaJavadoc)
     from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
     archiveClassifier.set("javadoc")
 }
 
-tasks.register("prepareMaven") {
-    dependsOn(tasks["dokkaJavadocJar"])
-    dependsOn(tasks.build)
+publishing {
+    repositories {
+        maven {
+            val repoUrl = if (version.toString().endsWith("SNAPSHOT")) {
+                "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+            } else {
+                "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            }
+            url = uri(repoUrl)
+            name = "OSSRH"
+        }
+    }
+
+    publications {
+        create<MavenPublication>("kastle-lib") {
+            groupId = "io.github.essay97"
+            artifactId = "kastle-lib"
+            version = "0.0.1"
+
+            from(components["java"])
+            artifact(javadocJar)
+
+            pom {
+                name = "Kastle Library"
+                description = "Develop games for the Kastle Engine"
+                developers {
+                    developer {
+                        name = "Enrico Saggiorato"
+                    }
+                }
+            }
+        }
+    }
+}
+
+signing {
+    sign(publishing.publications["kastle-lib"])
 }
