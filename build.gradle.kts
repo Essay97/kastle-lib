@@ -53,18 +53,19 @@ val javadocJar by tasks.registering(Jar::class) {
 publishing {
     repositories {
         maven {
-            val repoUrl = if (version.toString().endsWith("SNAPSHOT")) {
+            val repoUrl = /*if (version.toString().endsWith("SNAPSHOT")) {
                 "https://s01.oss.sonatype.org/content/repositories/snapshots/"
             } else {
                 "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-            }
+            }*/
+                "file:///Users/enrico/maven-local"
             url = uri(repoUrl)
-            name = "OSSRH"
+            name = "localRepo"
         }
     }
 
     publications {
-        create<MavenPublication>("kastle-lib") {
+        create<MavenPublication>("kastleLib") {
             groupId = "io.github.essay97"
             artifactId = "kastle-lib"
             version = "0.0.1"
@@ -75,10 +76,23 @@ publishing {
             pom {
                 name = "Kastle Library"
                 description = "Develop games for the Kastle Engine"
+                url = "https://github.com/Essay97/kastle-lib"
+
                 developers {
                     developer {
                         name = "Enrico Saggiorato"
                     }
+                }
+
+                licenses {
+                    url = "https://www.gnu.org/licenses/gpl-3.0.html"
+                    name = "GNU General Public License v3.0"
+                }
+
+                scm {
+                    url = "https://github.com/Essay97/kastle-lib"
+                    connection = "scm:git://github.com:Essay97/kastle-lib.git"
+                    developerConnection = "scm:git://github.com:Essay97/kastle-lib.git"
                 }
             }
         }
@@ -86,5 +100,5 @@ publishing {
 }
 
 signing {
-    sign(publishing.publications["kastle-lib"])
+    sign(publishing.publications["kastleLib"])
 }
