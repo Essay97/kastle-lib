@@ -89,8 +89,10 @@ publishing {
                 }
 
                 licenses {
-                    url = "https://www.gnu.org/licenses/gpl-3.0.html"
-                    name = "GNU General Public License v3.0"
+                    license {
+                        url = "https://www.gnu.org/licenses/gpl-3.0.html"
+                        name = "GNU General Public License v3.0"
+                    }
                 }
 
                 scm {
