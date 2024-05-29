@@ -30,6 +30,10 @@ java {
     withSourcesJar()
 }
 
+kotlin {
+    jvmToolchain(8)
+}
+
 sqldelight {
     databases {
         create("Database") {
