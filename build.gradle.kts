@@ -42,27 +42,23 @@ sqldelight {
     }
 }
 
-tasks.register<Jar>("dokkaHtmlJar") {
+val dokkaHtmlJar by tasks.registering(Jar::class) {
     dependsOn(tasks.dokkaHtml)
     from(tasks.dokkaHtml.flatMap { it.outputDirectory })
-    archiveClassifier.set("html-docs")
+    archiveClassifier.set("javadoc")
 }
 
 val javadocJar by tasks.registering(Jar::class) {
     dependsOn(tasks.dokkaJavadoc)
     from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
-    archiveClassifier.set("javadoc")
+    archiveClassifier.set("javadoc-java") // "javadoc" is needed for Dokka that will be included in the Maven Central zip
 }
 
 publishing {
     repositories {
         maven {
-            val repoUrl = /*if (version.toString().endsWith("SNAPSHOT")) {
-                "https://s01.oss.sonatype.org/content/repositories/snapshots/"
-            } else {
-                "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-            }*/
-                "file:///Users/enrico/maven-local"
+            val repoUrl = "file://${System.getProperty("user.home")}/maven-local"
+
             url = uri(repoUrl)
             name = "localRepo"
         }
@@ -75,7 +71,7 @@ publishing {
             version = "0.0.1"
 
             from(components["java"])
-            artifact(javadocJar)
+            artifact(dokkaHtmlJar)
 
             pom {
                 name = "Kastle Library"

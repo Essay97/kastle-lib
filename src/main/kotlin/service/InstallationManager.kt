@@ -17,7 +17,7 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.io.path.*
 
-class InstallationManager private constructor(private val gamesDbFile: Path) {
+class InstallationManager private constructor(gamesDbFile: Path) {
 
     private val queries: GamesQueries
 
