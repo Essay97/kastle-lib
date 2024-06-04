@@ -8,5 +8,6 @@ class GameConfiguration(
     val characters: List<CharacterDto>?,
     val metadata: MetadataDto?,
     val winningConditions: WinningConditionsDto?,
-    val preface: String?
+    val preface: String?,
+    val epilogue: String?
 )

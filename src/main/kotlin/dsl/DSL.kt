@@ -42,6 +42,14 @@ class GameScope(private val initialRoomId: String) {
      */
     var preface: String? = null
 
+    /**
+     * The preface is a phrase or short text that, if defined, is printed at the very end of the game, after that
+     * the victory has been announced.
+     *
+     * It can be used to provide a narrative ending to the game or to show credits.
+     */
+    var epilogue: String? = null
+
 
 
     fun metadata(init: MetadataScope.() -> Unit) {
@@ -82,14 +90,15 @@ class GameScope(private val initialRoomId: String) {
     }
 
     internal fun build(): GameConfiguration = GameConfiguration(
-        initialRoomId = initialRoomId,
-        metadata = metadata,
-        player = player,
         rooms = rooms,
+        player = player,
+        initialRoomId = initialRoomId,
         items = items,
         characters = characters,
+        metadata = metadata,
+        winningConditions = winningConditions,
         preface = preface,
-        winningConditions = winningConditions
+        epilogue = epilogue
     )
 
 

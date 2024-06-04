@@ -51,7 +51,7 @@ class ConfigurationManager {
         val movementManager = MovementManager(state, dungeonMap).bind()
         val interactableManager = InteractableManager(state)
         val informationManager =
-            InformationManager(config.metadata?.toGameMetadata(), config.preface ?: "", config.player.toPlayer())
+            InformationManager(config.metadata?.toGameMetadata(), config.player.toPlayer(), config.preface ?: "", config.epilogue ?: "")
         val inventoryManager = InventoryManager(state)
         val runManager =
             RunManager(config.winningConditions?.toWinningConditions()?.bind(), state)
