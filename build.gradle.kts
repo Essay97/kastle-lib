@@ -66,9 +66,9 @@ publishing {
 
     publications {
         create<MavenPublication>("kastleLib") {
-            groupId = "io.github.essay97"
-            artifactId = "kastle-lib"
-            version = "0.0.1"
+            groupId = project.group.toString()
+            artifactId = rootProject.name
+            version = project.version.toString()
 
             from(components["java"])
             artifact(dokkaHtmlJar)
