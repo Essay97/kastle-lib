@@ -7,6 +7,7 @@ on:
 run-name: "Release Library ${{ github.ref_name }}"
 jobs:
   build: 
+    name: Build and bundle
     runs-on: ubuntu-latest
     steps: 
       - name: Checkout project sources
@@ -27,5 +28,25 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: maven-package
+          name: maven-bundle
           path: kastle-lib.zip
+  deploy:
+    name: Deploy bundle 
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Download artifact
+        uses: actions/download-artifact@v4.1.7
+        with: 
+          name: maven-bundle
+      - name: Upload via Publisher API
+        uses: fjogeleit/http-request-action@v1.15.5
+        with:
+          url: https://central.sonatype.com/api/v1/publisher/upload?publishingType=USER_MANAGED
+          method: POST
+          contentType: multipart/form-data
+          files: '{ "bundle": "${{ github.workspace }}/kastle-lib.zip" }'
+          bearerToken: ${{ secrets.PUBLISHER_API_BEARER }}
+          
+          
+    
+  
