@@ -7,7 +7,7 @@ plugins {
     signing
 }
 
-version = "0.0.1"
+version = "0.1.0"
 group = "io.github.essay97"
 
 repositories {
@@ -102,5 +102,8 @@ publishing {
 }
 
 signing {
+    val signingKey: String? by project
+    val signingPassword: String? by project
+    useInMemoryPgpKeys(signingKey, signingPassword)
     sign(publishing.publications["kastleLib"])
 }
