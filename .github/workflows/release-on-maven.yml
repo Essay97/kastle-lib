@@ -28,6 +28,7 @@ jobs:
         run: |
           cd $HOME/maven-local
           zip -r kastle-lib.zip io -x "io/github/essay97/kastle-lib/maven-metadata*"
+          pwd && ll
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
