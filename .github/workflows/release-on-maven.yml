@@ -32,7 +32,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: maven-bundle
-          path: kastle-lib.zip
+          path: $HOME/maven-local/kastle-lib.zip
   deploy:
     name: Deploy bundle 
     runs-on: ubuntu-latest
