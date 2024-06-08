@@ -20,6 +20,9 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
       - name: Push to local Maven repository
+        env: 
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASSWORD }}
         run: ./gradlew publishKastleLibPublicationToLocalRepoRepository
       - name: Zip local repository
         run: |
@@ -39,10 +42,14 @@ jobs:
         uses: actions/download-artifact@v4.1.7
         with: 
           name: maven-bundle
+      - name: Get version number
+        id: version-number
+        run: |
+          echo "VERSION=$(echo ${{ github.ref_name }} | sed 's/v//g')" >> "$GITHUB_OUTPUT"
       - name: Upload via Publisher API
         uses: fjogeleit/http-request-action@v1.15.5
         with:
-          url: https://central.sonatype.com/api/v1/publisher/upload?publishingType=USER_MANAGED
+          url: https://central.sonatype.com/api/v1/publisher/upload?publishingType=USER_MANAGED&name=io.github.essay97:kastle-lib:${{ steps.version-number.outputs.VERSION }}
           method: POST
           contentType: multipart/form-data
           files: '{ "bundle": "${{ github.workspace }}/kastle-lib.zip" }'
