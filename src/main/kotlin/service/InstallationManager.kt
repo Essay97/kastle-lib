@@ -6,6 +6,7 @@ import arrow.core.Either
 import arrow.core.getOrElse
 import arrow.core.left
 import arrow.core.raise.either
+import arrow.core.raise.ensure
 import arrow.core.raise.ensureNotNull
 import io.github.essay97.kastle.db.Database
 import io.github.essay97.kastle.db.GamesQueries
@@ -32,12 +33,13 @@ class InstallationManager private constructor(gamesDbFile: Path) {
         // Insert game into database
         val gameFileName = gameFile.fileName.name
         val game = queries.getFilteredGames(name, className, gameFileName).executeAsOneOrNull()
-        ensureNotNull(game) { GameFileError.GameAlreadyExists }
+        ensure(game == null) { GameFileError.GameAlreadyExists }
         queries.insert(gameName = name, mainClass = className, fileName = gameFileName)
 
         // Copy game file into games folder. Needed for ServiceLoader so that all files are in a predictable folder
         val gamesFolder = handleGamesFolder().bind()
-        Files.copy(gameFile, gamesFolder)
+        Files.copy(gameFile, gamesFolder.resolve(gameFileName))
+
     }
 
     fun uninstallGame(name: String): Either<ConfigError, Unit> = either {
